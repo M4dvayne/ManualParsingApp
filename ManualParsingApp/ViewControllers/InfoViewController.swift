@@ -28,7 +28,6 @@ class InfoViewController: UIViewController {
         getInfoButton.layer.cornerRadius = 10
     }
     
-    
     @IBAction func getZipCodeInfoButton() {
         NetworkManager.shared.fetchZipInfo { zip in
             self.postCodeLabel.text = zip.postCode

@@ -30,16 +30,15 @@ class InfoViewController: UIViewController {
     
     
     @IBAction func getZipCodeInfoButton() {
-        
         NetworkManager.shared.fetchZipInfo { zip in
-            self.postCodeLabel.text = zip.first?.postCode
-            self.countryLabel.text = zip.first?.country
-            self.countryAbbreviationLabel.text = zip.first?.countryAbbreviation
-            self.placeNameLabel.text = zip.first?.places?.placeName
-            self.longitudeLabel.text = zip.first?.places?.longitude
-            self.stateLabel.text = zip.first?.places?.state
-            self.stateAbbreviationLabel.text = zip.first?.places?.stateAbbreviation
-            self.latitudeLabel.text = zip.first?.places?.latitude
+            self.postCodeLabel.text = zip.postCode
+            self.countryLabel.text = zip.country
+            self.countryAbbreviationLabel.text = zip.countryAbbreviation
+            self.placeNameLabel.text = zip.places?.first?.placeName
+            self.longitudeLabel.text = zip.places?.first?.longitude
+            self.stateLabel.text = zip.places?.first?.state
+            self.stateAbbreviationLabel.text = zip.places?.first?.stateAbbreviation
+            self.latitudeLabel.text = zip.places?.first?.latitude
         }
     }
 }

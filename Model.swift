@@ -12,36 +12,21 @@ struct ZipCode: Decodable {
     let postCode: String?
     let country: String?
     let countryAbbreviation: String?
-    let places: Place?
-    
-    enum CodingKeys: String, CodingKey {
-        case postCode = "post code"
-        case country
-        case countryAbbreviation = "country abbreviation"
-        case places
-    }
+    let places: [Place]?
     
     init (value: [String: Any]) {
-        postCode = value["post сode"] as? String
+        postCode = value["post code"] as? String
         country = value["country"] as? String
         countryAbbreviation = value["country abbreviation"] as? String
-        let placesDictionary = value["places"] as? [String: Any] ?? [:]
-        places = Place(value: placesDictionary)
+        let placesDict = value["places"] as? [[String: Any]] ?? [[:]]
+        places = Place.getPlaceInfo(from: placesDict)
     }
     
-    
-    static func getZipInfo(from value: Any) -> [ZipCode]? {
-        var zipInformation: [ZipCode] = []
+    static func getZipInfo(from value: Any) -> ZipCode? {
+        guard let valueDictionary = value as? [String: Any] else {return nil}
+        let zipInfo = ZipCode(value: valueDictionary)
         
-        guard let value = value as? [String: Any] else {return []}
-        
-        for zipValue in value {
-            
-            let zipItem = ZipCode(value: value)
-            zipInformation.append(zipItem)
-        }
-        
-        return zipInformation
+        return zipInfo
     }
 }
 
@@ -53,13 +38,6 @@ struct Place: Decodable {
     let stateAbbreviation: String?
     let latitude: String?
     
-    enum CodingKeys: String, CodingKey {
-        case placeName = "place name"
-        case longitude, state
-        case stateAbbreviation = "state abbreviation"
-        case latitude
-    }
-    
     init(value: [String: Any]) {
         placeName = value["place name"] as? String
         longitude = value["longitude"] as? String
@@ -67,7 +45,14 @@ struct Place: Decodable {
         stateAbbreviation = value["state abbreviation"] as? String
         latitude = value["latitude"] as? String
     }
+    static func getPlaceInfo(from value: Any) -> [Place]? {
+        guard let placeDictionary = value as? [String: Any] else {return []}
+        let placeInfo = Place(value: placeDictionary)
+
+        return [placeInfo]
+    }
 }
+
 enum Link: String {
     
     case json = "https://api.zippopotam.us/us/90210"

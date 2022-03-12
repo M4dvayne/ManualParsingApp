@@ -20,7 +20,7 @@ class NetworkManager {
     
     private init() {}
     
-    func fetchZipInfo(completion: @escaping ([ZipCode]) -> Void) {
+    func fetchZipInfo(completion: @escaping (ZipCode) -> Void) {
         
         AF.request(Link.json.rawValue)
             .validate()
@@ -29,7 +29,10 @@ class NetworkManager {
                 case .success(let value):
                     print(value)
                     guard let receivedValue = ZipCode.getZipInfo(from: value) else {return}
-                    completion(receivedValue)
+                    DispatchQueue.main.async {
+                        completion(receivedValue)
+                    }
+                    
                 case .failure(let error):
                     print(error)
                 }
